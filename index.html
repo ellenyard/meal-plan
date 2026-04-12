@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ellen's Meal Plan</title>
+<style>
+:root {
+  --bg: #faf9f6;
+  --card: #ffffff;
+  --primary: #e07a5f;
+  --primary-light: #f4a261;
+  --accent: #3d405b;
+  --green: #81b29a;
+  --green-dark: #5f9178;
+  --text: #2d2d2d;
+  --text-light: #6b7280;
+  --border: #e5e7eb;
+  --sautters: #a78bfa;
+  --instacart: #34d399;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 0 100px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  padding: 24px 20px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header h1 { font-size: 20px; font-weight: 700; }
+.header .week { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+.header .status {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-top: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.status-waiting { background: rgba(255,255,255,0.25); }
+.status-ready { background: rgba(255,255,255,0.4); }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 88px;
+  z-index: 99;
+}
+.tab {
+  flex: 1;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+.tab .badge {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  margin-left: 4px;
+}
+
+/* Tab Content */
+.tab-content { display: none; padding: 16px; }
+.tab-content.active { display: block; }
+
+/* Section Labels */
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-light);
+  margin: 20px 0 10px;
+  padding-left: 2px;
+}
+.section-label:first-child { margin-top: 4px; }
+
+/* Dinner Cards */
+.dinner-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.dinner-card.selected {
+  border-color: var(--green);
+  background: #f0faf4;
+}
+.dinner-card .check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.dinner-card.selected .check {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+.dinner-card h3 { font-size: 15px; font-weight: 600; padding-right: 36px; }
+.dinner-card .desc { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+.dinner-card .prep {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* Grocery Items */
+.grocery-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  box-shadow: var(--shadow);
+}
+.grocery-item.checked { opacity: 0.5; }
+.grocery-item.checked .item-name { text-decoration: line-through; }
+
+.item-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.15s;
+}
+.item-check.checked {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.item-info { flex: 1; min-width: 0; }
+.item-name { font-size: 14px; font-weight: 500; }
+.item-source { font-size: 11px; color: var(--text-light); }
+
+.store-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  border: none;
+}
+.store-instacart { background: #d1fae5; color: #065f46; }
+.store-sautters { background: #ede9fe; color: #5b21b6; }
+
+/* Regulars */
+.regular-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 6px;
+  box-shadow: var(--shadow);
+}
+.regular-toggle {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.regular-toggle.active { background: var(--green); }
+.regular-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.regular-toggle.active::after { left: 20px; }
+
+/* Add Item */
+.add-item-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+.add-item-row input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  background: var(--card);
+}
+.add-item-row input:focus { border-color: var(--primary); }
+.add-btn {
+  padding: 10px 16px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Shopping Summary */
+.summary-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.summary-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.summary-card .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-instacart { background: var(--instacart); }
+.dot-sautters { background: var(--sautters); }
+.summary-list { list-style: none; }
+.summary-list li {
+  font-size: 13px;
+  padding: 4px 0;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.summary-list li.checked-item {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+/* Loading & Empty States */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-light);
+}
+.loading .spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-light);
+  font-size: 14px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--accent);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 200;
+  transition: transform 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>This Week's Meal Plan</h1>
+  <div class="week" id="weekLabel">Loading...</div>
+  <span class="status status-waiting" id="statusBadge">Loading</span>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="dinners">Dinners</button>
+  <button class="tab" data-tab="grocery">Grocery <span class="badge" id="groceryCount">0</span></button>
+  <button class="tab" data-tab="regulars">Regulars</button>
+  <button class="tab" data-tab="shop">Shop</button>
+</div>
+
+<!-- DINNERS TAB -->
+<div class="tab-content active" id="tab-dinners">
+  <div class="loading" id="dinners-loading">
+    <div class="spinner"></div>
+    Loading meal plan...
+  </div>
+  <div id="dinners-list"></div>
+  <div class="empty-state" id="dinners-empty" style="display:none">
+    No dinners available yet. The meal plan hasn't been generated for this week.
+  </div>
+</div>
+
+<!-- GROCERY TAB -->
+<div class="tab-content" id="tab-grocery">
+  <div id="grocery-list"></div>
+  <div class="section-label" style="margin-top:20px">Add Custom Item</div>
+  <div class="add-item-row">
+    <input type="text" id="customItemName" placeholder="Item name...">
+    <button class="add-btn" onclick="addCustomItem()">Add</button>
+  </div>
+</div>
+
+<!-- REGULARS TAB -->
+<div class="tab-content" id="tab-regulars">
+  <p style="font-size:13px;color:var(--text-light);margin-bottom:16px">
+    These items are added to your grocery list every week. Toggle off anything you don't need this time.
+  </p>
+  <div id="regulars-list"></div>
+</div>
+
+<!-- SHOP TAB -->
+<div class="tab-content" id="tab-shop">
+  <p style="font-size:13px;color:var(--text-light);margin-bottom:16px">
+    Your shopping list organized by store. Tap items to check them off as you shop.
+  </p>
+  <div id="shop-instacart"></div>
+  <div id="shop-sautters" style="margin-top:16px"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbz0jyJ_rS2pmqS5FQ0FPeWMDkwcabOEK-NxlLks293MBrigC9wpg_CtUprpjm_aD5NDaA/exec';
+
+let appData = { dinners: [], groceryList: [], regulars: [], customItems: [], config: {} };
+
+// ---- DATA FETCHING ----
+async function loadData() {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    appData = data;
+    renderAll();
+  } catch (err) {
+    console.error('Load error:', err);
+    document.getElementById('dinners-loading').innerHTML =
+      '<p style="color:#ef4444">Could not load data. Please refresh.</p>';
+  }
+}
+
+async function postAction(payload) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+    return await res.json();
+  } catch (err) {
+    console.error('Post error:', err);
+    showToast('Action failed â check your connection');
+    return { success: false };
+  }
+}
+
+// ---- RENDERING ----
+function renderAll() {
+  renderHeader();
+  renderDinners();
+  renderGrocery();
+  renderRegulars();
+  renderShop();
+  updateGroceryCount();
+}
+
+function renderHeader() {
+  const weekOf = appData.config.weekOf || 'Not set';
+  const status = appData.config.status || 'waiting';
+  document.getElementById('weekLabel').textContent = weekOf ? `Week of ${weekOf}` : 'Week not set';
+  const badge = document.getElementById('statusBadge');
+  badge.textContent = status === 'waiting' ? 'Waiting for plan' : 'Ready';
+  badge.className = 'status ' + (status === 'waiting' ? 'status-waiting' : 'status-ready');
+}
+
+function renderDinners() {
+  const loading = document.getElementById('dinners-loading');
+  const empty = document.getElementById('dinners-empty');
+  const list = document.getElementById('dinners-list');
+  loading.style.display = 'none';
+
+  if (!appData.dinners || appData.dinners.length === 0) {
+    empty.style.display = 'block';
+    list.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const selectedCount = appData.dinners.filter(d => d.selected === true || d.selected === 'true' || d.selected === 'TRUE').length;
+
+  list.innerHTML = `
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:14px">
+      ${selectedCount} dinner${selectedCount !== 1 ? 's' : ''} selected for this week.
+    </p>
+    ${appData.dinners.map(d => {
+      const sel = d.selected === true || d.selected === 'true' || d.selected === 'TRUE';
+      return `
+        <div class="dinner-card ${sel ? 'selected' : ''}" onclick="toggleDinner('${escHtml(d.name)}', ${!sel})">
+          <div class="check">${sel ? 'â' : ''}</div>
+          <h3>${escHtml(d.name)}</h3>
+          <div class="desc">${escHtml(d.description || '')}</div>
+          <span class="prep">${escHtml(d.prepTime || '')}</span>
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+function renderGrocery() {
+  const list = document.getElementById('grocery-list');
+  const allItems = [
+    ...appData.groceryList.map(i => ({...i, sheet: 'GroceryList'})),
+    ...appData.customItems.map(i => ({...i, sheet: 'CustomItems'}))
+  ];
+
+  if (allItems.length === 0) {
+    list.innerHTML = '<div class="empty-state">No grocery items yet. Select dinners to populate your list.</div>';
+    return;
+  }
+
+  // Group by category
+  const grouped = {};
+  allItems.forEach(item => {
+    const cat = item.category || 'Other';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(item);
+  });
+
+  let html = '';
+  Object.keys(grouped).sort().forEach(cat => {
+    html += `<div class="section-label">${escHtml(cat)}</div>`;
+    grouped[cat].forEach(item => {
+      const checked = item.checked === true || item.checked === 'true' || item.checked === 'TRUE';
+      const store = item.store || 'instacart';
+      html += `
+        <div class="grocery-item ${checked ? 'checked' : ''}">
+          <div class="item-check ${checked ? 'checked' : ''}"
+               onclick="toggleItemCheck('${escHtml(item.name)}', '${item.sheet}')">
+            ${checked ? 'â' : ''}
+          </div>
+          <div class="item-info">
+            <div class="item-name">${escHtml(item.name)}</div>
+            ${item.source ? `<div class="item-source">from: ${escHtml(item.source)}</div>` : ''}
+          </div>
+          <button class="store-badge store-${store}"
+                  onclick="event.stopPropagation(); cycleStore('${escHtml(item.name)}', '${store}', '${item.sheet}')">
+            ${store === 'sautters' ? "Sautters'" : 'Instacart'}
+          </button>
+        </div>
+      `;
+    });
+  });
+  list.innerHTML = html;
+}
+
+function renderRegulars() {
+  const list = document.getElementById('regulars-list');
+  if (!appData.regulars || appData.regulars.length === 0) {
+    list.innerHTML = '<div class="empty-state">No regular items configured.</div>';
+    return;
+  }
+
+  // Group by category
+  const grouped = {};
+  appData.regulars.forEach(item => {
+    const cat = item.category || 'Other';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(item);
+  });
+
+  let html = '';
+  Object.keys(grouped).sort().forEach(cat => {
+    html += `<div class="section-label">${escHtml(cat)}</div>`;
+    grouped[cat].forEach(item => {
+      const active = item.active === true || item.active === 'true' || item.active === 'TRUE';
+      const store = item.defaultStore || 'instacart';
+      html += `
+        <div class="regular-item">
+          <button class="regular-toggle ${active ? 'active' : ''}"
+                  onclick="toggleRegularItem('${escHtml(item.name)}', ${!active})"></button>
+          <div class="item-info">
+            <div class="item-name">${escHtml(item.name)}</div>
+          </div>
+          <button class="store-badge store-${store}"
+                  onclick="event.stopPropagation(); cycleRegularStore('${escHtml(item.name)}', '${store}')">
+            ${store === 'sautters' ? "Sautters'" : 'Instacart'}
+          </button>
+        </div>
+      `;
+    });
+  });
+  list.innerHTML = html;
+}
+
+function renderShop() {
+  // Combine grocery items + active regulars + custom items
+  const items = [];
+
+  appData.groceryList.forEach(i => items.push({
+    name: i.name, store: i.store || 'instacart',
+    checked: i.checked === true || i.checked === 'true' || i.checked === 'TRUE',
+    category: i.category, sheet: 'GroceryList'
+  }));
+
+  appData.regulars.filter(r => r.active === true || r.active === 'true' || r.active === 'TRUE').forEach(i => items.push({
+    name: i.name, store: i.defaultStore || 'instacart',
+    checked: false, category: i.category, sheet: 'Regulars'
+  }));
+
+  appData.customItems.forEach(i => items.push({
+    name: i.name, store: i.store || 'instacart',
+    checked: i.checked === true || i.checked === 'true' || i.checked === 'TRUE',
+    category: i.category, sheet: 'CustomItems'
+  }));
+
+  const instacart = items.filter(i => i.store !== 'sautters');
+  const sautters = items.filter(i => i.store === 'sautters');
+
+  document.getElementById('shop-instacart').innerHTML = renderShopCard(
+    'Instacart', 'instacart', instacart
+  );
+  document.getElementById('shop-sautters').innerHTML = renderShopCard(
+    "Sautters'", 'sautters', sautters
+  );
+}
+
+function renderShopCard(title, storeKey, items) {
+  const checkedCount = items.filter(i => i.checked).length;
+  return `
+    <div class="summary-card">
+      <h3><span class="dot dot-${storeKey}"></span> ${title} (${items.length} items, ${checkedCount} done)</h3>
+      <ul class="summary-list">
+        ${items.length === 0 ? '<li style="color:var(--text-light)">No items</li>' :
+          items.map(i => `
+            <li class="${i.checked ? 'checked-item' : ''}"
+                onclick="toggleShopItem('${escHtml(i.name)}', '${i.sheet}')"
+                style="cursor:pointer">
+              <span>${i.checked ? 'â' : 'â'}</span> ${escHtml(i.name)}
+            </li>
+          `).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+function updateGroceryCount() {
+  const count = (appData.groceryList?.length || 0) + (appData.customItems?.length || 0);
+  document.getElementById('groceryCount').textContent = count;
+}
+
+// ---- ACTIONS ----
+async function toggleDinner(name, selected) {
+  // Optimistic update
+  const dinner = appData.dinners.find(d => d.name === name);
+  if (dinner) dinner.selected = selected;
+  renderDinners();
+  showToast(selected ? `Added: ${name}` : `Removed: ${name}`);
+
+  await postAction({ action: 'selectDinner', name, selected });
+}
+
+async function toggleItemCheck(name, sheetName) {
+  // Optimistic
+  const arr = sheetName === 'CustomItems' ? appData.customItems : appData.groceryList;
+  const item = arr.find(i => i.name === name);
+  if (item) item.checked = !(item.checked === true || item.checked === 'true' || item.checked === 'TRUE');
+  renderGrocery();
+  renderShop();
+
+  await postAction({ action: 'toggleChecked', name, sheetName });
+}
+
+async function toggleShopItem(name, sheetName) {
+  if (sheetName === 'Regulars') return; // Regulars don't have a checked state
+  await toggleItemCheck(name, sheetName);
+}
+
+async function cycleStore(name, currentStore, sheetName) {
+  const newStore = currentStore === 'instacart' ? 'sautters' : 'instacart';
+  // Optimistic
+  const arr = sheetName === 'CustomItems' ? appData.customItems : appData.groceryList;
+  const item = arr.find(i => i.name === name);
+  if (item) item.store = newStore;
+  renderGrocery();
+  renderShop();
+  showToast(`${name} â ${newStore === 'sautters' ? "Sautters'" : 'Instacart'}`);
+
+  await postAction({ action: 'updateStore', name, store: newStore, sheetName });
+}
+
+async function cycleRegularStore(name, currentStore) {
+  const newStore = currentStore === 'instacart' ? 'sautters' : 'instacart';
+  const item = appData.regulars.find(i => i.name === name);
+  if (item) item.defaultStore = newStore;
+  renderRegulars();
+  renderShop();
+  showToast(`${name} â ${newStore === 'sautters' ? "Sautters'" : 'Instacart'}`);
+
+  await postAction({ action: 'updateStore', name, store: newStore, sheetName: 'Regulars' });
+}
+
+async function toggleRegularItem(name, active) {
+  const item = appData.regulars.find(i => i.name === name);
+  if (item) item.active = active;
+  renderRegulars();
+  renderShop();
+  updateGroceryCount();
+  showToast(active ? `Added: ${name}` : `Removed: ${name}`);
+
+  await postAction({ action: 'toggleRegular', name, active });
+}
+
+async function addCustomItem() {
+  const input = document.getElementById('customItemName');
+  const name = input.value.trim();
+  if (!name) return;
+
+  input.value = '';
+  const weekOf = appData.config.weekOf || '';
+
+  // Optimistic
+  appData.customItems.push({ name, category: 'Custom', store: 'instacart', checked: false, weekOf });
+  renderGrocery();
+  renderShop();
+  updateGroceryCount();
+  showToast(`Added: ${name}`);
+
+  await postAction({ action: 'addCustomItem', name, category: 'Custom', store: 'instacart', weekOf });
+}
+
+// ---- TABS ----
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ---- UTILITIES ----
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// Handle Enter key on custom item input
+document.getElementById('customItemName').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') addCustomItem();
+});
+
+// ---- INIT ----
+loadData();
+</script>
+</body>
+</html>
