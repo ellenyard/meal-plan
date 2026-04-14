@@ -153,6 +153,17 @@ body {
   font-weight: 600;
   margin-top: 6px;
 }
+.dinner-card .recipe-link {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: 8px;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--accent);
+  padding-bottom: 1px;
+}
+.dinner-card .recipe-link:hover { color: var(--primary); border-color: var(--primary); }
 
 /* Grocery Items */
 .grocery-item {
@@ -417,6 +428,9 @@ async function loadData() {
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
+    // Filter out empty rows from sheets
+    data.dinners = (data.dinners || []).filter(d => d.name && d.name.trim());
+    data.groceryList = (data.groceryList || []).filter(i => i.name && i.name.trim());
     appData = data;
     renderAll();
   } catch (err) {
@@ -435,9 +449,29 @@ async function postAction(payload) {
     return await res.json();
   } catch (err) {
     console.error('Post error:', err);
-    showToast('Action failed â check your connection');
+    showToast('Action failed — check your connection');
     return { success: false };
   }
+}
+
+// ---- HELPERS ----
+function getSelectedDinnerNames() {
+  const selected = appData.dinners
+    .filter(d => d.selected === true || d.selected === 'true' || d.selected === 'TRUE')
+    .map(d => d.name);
+  return new Set(selected);
+}
+
+function isItemVisibleForSelection(item) {
+  // Always show Shared items, custom items, and items with no source
+  const src = (item.source || '').trim();
+  if (!src || src === 'Shared') return true;
+  // Show if the source dinner is selected
+  return getSelectedDinnerNames().has(src);
+}
+
+function hasAnyDinnerSelected() {
+  return appData.dinners.some(d => d.selected === true || d.selected === 'true' || d.selected === 'TRUE');
 }
 
 // ---- RENDERING ----
@@ -480,12 +514,14 @@ function renderDinners() {
     </p>
     ${appData.dinners.map(d => {
       const sel = d.selected === true || d.selected === 'true' || d.selected === 'TRUE';
+      const recipeUrl = d.recipeUrl || '';
       return `
         <div class="dinner-card ${sel ? 'selected' : ''}" onclick="toggleDinner('${escHtml(d.name)}', ${!sel})">
-          <div class="check">${sel ? 'â' : ''}</div>
+          <div class="check">${sel ? '✓' : ''}</div>
           <h3>${escHtml(d.name)}</h3>
           <div class="desc">${escHtml(d.description || '')}</div>
           <span class="prep">${escHtml(d.prepTime || '')}</span>
+          ${recipeUrl ? `<br><a class="recipe-link" href="${escHtml(recipeUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View full recipe →</a>` : ''}
         </div>
       `;
     }).join('')}
@@ -494,19 +530,29 @@ function renderDinners() {
 
 function renderGrocery() {
   const list = document.getElementById('grocery-list');
+  const anySelected = hasAnyDinnerSelected();
   const allItems = [
     ...appData.groceryList.map(i => ({...i, sheet: 'GroceryList'})),
     ...appData.customItems.map(i => ({...i, sheet: 'CustomItems'}))
   ];
 
-  if (allItems.length === 0) {
+  // Filter: if any dinners are selected, only show items for those dinners + Shared + custom
+  const visibleItems = anySelected
+    ? allItems.filter(i => isItemVisibleForSelection(i) || i.sheet === 'CustomItems')
+    : allItems;
+
+  if (visibleItems.length === 0 && allItems.length > 0) {
+    list.innerHTML = '<div class="empty-state">Select dinners to see their ingredients here.</div>';
+    return;
+  }
+  if (visibleItems.length === 0) {
     list.innerHTML = '<div class="empty-state">No grocery items yet. Select dinners to populate your list.</div>';
     return;
   }
 
   // Group by category
   const grouped = {};
-  allItems.forEach(item => {
+  visibleItems.forEach(item => {
     const cat = item.category || 'Other';
     if (!grouped[cat]) grouped[cat] = [];
     grouped[cat].push(item);
@@ -522,7 +568,7 @@ function renderGrocery() {
         <div class="grocery-item ${checked ? 'checked' : ''}">
           <div class="item-check ${checked ? 'checked' : ''}"
                onclick="toggleItemCheck('${escHtml(item.name)}', '${item.sheet}')">
-            ${checked ? 'â' : ''}
+            ${checked ? '✓' : ''}
           </div>
           <div class="item-info">
             <div class="item-name">${escHtml(item.name)}</div>
@@ -581,8 +627,9 @@ function renderRegulars() {
 function renderShop() {
   // Combine grocery items + active regulars + custom items
   const items = [];
+  const anySelected = hasAnyDinnerSelected();
 
-  appData.groceryList.forEach(i => items.push({
+  appData.groceryList.filter(i => !anySelected || isItemVisibleForSelection(i)).forEach(i => items.push({
     name: i.name, store: i.store || 'instacart',
     checked: i.checked === true || i.checked === 'true' || i.checked === 'TRUE',
     category: i.category, sheet: 'GroceryList'
@@ -621,7 +668,7 @@ function renderShopCard(title, storeKey, items) {
             <li class="${i.checked ? 'checked-item' : ''}"
                 onclick="toggleShopItem('${escHtml(i.name)}', '${i.sheet}')"
                 style="cursor:pointer">
-              <span>${i.checked ? 'â' : 'â'}</span> ${escHtml(i.name)}
+              <span>${i.checked ? '☑' : '☐'}</span> ${escHtml(i.name)}
             </li>
           `).join('')}
       </ul>
@@ -630,18 +677,23 @@ function renderShopCard(title, storeKey, items) {
 }
 
 function updateGroceryCount() {
-  const count = (appData.groceryList?.length || 0) + (appData.customItems?.length || 0);
+  const anySelected = hasAnyDinnerSelected();
+  const groceryVisible = anySelected
+    ? appData.groceryList.filter(i => isItemVisibleForSelection(i)).length
+    : (appData.groceryList?.length || 0);
+  const count = groceryVisible + (appData.customItems?.length || 0);
   document.getElementById('groceryCount').textContent = count;
 }
 
 // ---- ACTIONS ----
 async function toggleDinner(name, selected) {
-  // Optimistic update
+  // Optimistic update — re-render everything so grocery/shop tabs filter immediately
   const dinner = appData.dinners.find(d => d.name === name);
   if (dinner) dinner.selected = selected;
-  renderDinners();
+  renderAll();
   showToast(selected ? `Added: ${name}` : `Removed: ${name}`);
 
+  // Persist selection to backend
   await postAction({ action: 'selectDinner', name, selected });
 }
 
@@ -669,7 +721,7 @@ async function cycleStore(name, currentStore, sheetName) {
   if (item) item.store = newStore;
   renderGrocery();
   renderShop();
-  showToast(`${name} â ${newStore === 'sautters' ? "Sautters'" : 'Instacart'}`);
+  showToast(`${name} → ${newStore === 'sautters' ? "Sautters'" : 'Instacart'}`);
 
   await postAction({ action: 'updateStore', name, store: newStore, sheetName });
 }
@@ -680,7 +732,7 @@ async function cycleRegularStore(name, currentStore) {
   if (item) item.defaultStore = newStore;
   renderRegulars();
   renderShop();
-  showToast(`${name} â ${newStore === 'sautters' ? "Sautters'" : 'Instacart'}`);
+  showToast(`${name} → ${newStore === 'sautters' ? "Sautters'" : 'Instacart'}`);
 
   await postAction({ action: 'updateStore', name, store: newStore, sheetName: 'Regulars' });
 }
