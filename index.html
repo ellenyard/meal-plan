@@ -20,346 +20,103 @@
   --instacart: #34d399;
   --shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0 0 100px;
-  -webkit-font-smoothing: antialiased;
-}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); max-width: 480px; margin: 0 auto; padding: 0 0 100px; -webkit-font-smoothing: antialiased; }
 
 /* Header */
-.header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: white;
-  padding: 24px 20px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
+.header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; padding: 24px 20px 20px; position: sticky; top: 0; z-index: 100; }
 .header h1 { font-size: 20px; font-weight: 700; }
 .header .week { font-size: 13px; opacity: 0.85; margin-top: 4px; }
-.header .status {
-  display: inline-block;
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 12px;
-  margin-top: 8px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
+.header .status { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 12px; margin-top: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 .status-waiting { background: rgba(255,255,255,0.25); }
 .status-ready { background: rgba(255,255,255,0.4); }
 
 /* Tabs */
-.tabs {
-  display: flex;
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 88px;
-  z-index: 99;
-}
-.tab {
-  flex: 1;
-  padding: 12px 8px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-light);
-  border: none;
-  background: none;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-}
-.tab.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-}
-.tab .badge {
-  display: inline-block;
-  background: var(--primary);
-  color: white;
-  font-size: 10px;
-  padding: 1px 6px;
-  border-radius: 8px;
-  margin-left: 4px;
-}
+.tabs { display: flex; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 88px; z-index: 99; }
+.tab { flex: 1; padding: 12px 8px; text-align: center; font-size: 12px; font-weight: 600; color: var(--text-light); border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab .badge { display: inline-block; background: var(--primary); color: white; font-size: 10px; padding: 1px 6px; border-radius: 8px; margin-left: 4px; }
 
 /* Tab Content */
 .tab-content { display: none; padding: 16px; }
 .tab-content.active { display: block; }
 
 /* Section Labels */
-.section-label {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-light);
-  margin: 20px 0 10px;
-  padding-left: 2px;
-}
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); margin: 20px 0 10px; padding-left: 2px; }
 .section-label:first-child { margin-top: 4px; }
 
 /* Dinner Cards */
-.dinner-card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 10px;
-  box-shadow: var(--shadow);
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-}
-.dinner-card.selected {
-  border-color: var(--green);
-  background: #f0faf4;
-}
-.dinner-card .check {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  transition: all 0.2s;
-}
-.dinner-card.selected .check {
-  background: var(--green);
-  border-color: var(--green);
-  color: white;
-}
+.dinner-card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow); border: 2px solid transparent; cursor: pointer; transition: all 0.2s; position: relative; }
+.dinner-card.selected { border-color: var(--green); background: #f0faf4; }
+.dinner-card .check { position: absolute; top: 14px; right: 14px; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; }
+.dinner-card.selected .check { background: var(--green); border-color: var(--green); color: white; }
 .dinner-card h3 { font-size: 15px; font-weight: 600; padding-right: 36px; }
 .dinner-card .desc { font-size: 13px; color: var(--text-light); margin-top: 4px; }
-.dinner-card .prep {
-  display: inline-block;
-  font-size: 11px;
-  color: var(--primary);
-  font-weight: 600;
-  margin-top: 6px;
-}
-.dinner-card .recipe-link {
-  display: inline-block;
-  font-size: 12px;
-  color: var(--accent);
-  font-weight: 600;
-  margin-top: 8px;
-  text-decoration: none;
-  border-bottom: 1px dashed var(--accent);
-  padding-bottom: 1px;
-}
+.dinner-card .prep { display: inline-block; font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 6px; }
+.dinner-card .recipe-link { display: inline-block; font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 8px; text-decoration: none; border-bottom: 1px dashed var(--accent); padding-bottom: 1px; cursor: pointer; }
 .dinner-card .recipe-link:hover { color: var(--primary); border-color: var(--primary); }
 
 /* Grocery Items */
-.grocery-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--card);
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin-bottom: 6px;
-  box-shadow: var(--shadow);
-}
+.grocery-item { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 10px; padding: 12px 14px; margin-bottom: 6px; box-shadow: var(--shadow); }
 .grocery-item.checked { opacity: 0.5; }
 .grocery-item.checked .item-name { text-decoration: line-through; }
-
-.item-check {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  border: 2px solid var(--border);
-  flex-shrink: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  transition: all 0.15s;
-}
-.item-check.checked {
-  background: var(--green);
-  border-color: var(--green);
-  color: white;
-}
-
+.item-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: all 0.15s; }
+.item-check.checked { background: var(--green); border-color: var(--green); color: white; }
 .item-info { flex: 1; min-width: 0; }
 .item-name { font-size: 14px; font-weight: 500; }
 .item-source { font-size: 11px; color: var(--text-light); }
-
-.store-badge {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  flex-shrink: 0;
-  transition: all 0.15s;
-  border: none;
-}
+.store-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; transition: all 0.15s; border: none; }
 .store-instacart { background: #d1fae5; color: #065f46; }
 .store-sautters { background: #ede9fe; color: #5b21b6; }
 
 /* Regulars */
-.regular-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--card);
-  border-radius: 10px;
-  padding: 12px 14px;
-  margin-bottom: 6px;
-  box-shadow: var(--shadow);
-}
-.regular-toggle {
-  width: 40px;
-  height: 22px;
-  border-radius: 11px;
-  background: var(--border);
-  border: none;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s;
-  flex-shrink: 0;
-}
+.regular-item { display: flex; align-items: center; gap: 10px; background: var(--card); border-radius: 10px; padding: 12px 14px; margin-bottom: 6px; box-shadow: var(--shadow); }
+.regular-toggle { width: 40px; height: 22px; border-radius: 11px; background: var(--border); border: none; cursor: pointer; position: relative; transition: all 0.2s; flex-shrink: 0; }
 .regular-toggle.active { background: var(--green); }
-.regular-toggle::after {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: white;
-  transition: all 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-}
+.regular-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: white; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
 .regular-toggle.active::after { left: 20px; }
 
 /* Add Item */
-.add-item-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-}
-.add-item-row input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  font-size: 14px;
-  outline: none;
-  background: var(--card);
-}
+.add-item-row { display: flex; gap: 8px; margin-top: 16px; }
+.add-item-row input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; background: var(--card); }
 .add-item-row input:focus { border-color: var(--primary); }
-.add-btn {
-  padding: 10px 16px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-}
+.add-btn { padding: 10px 16px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 14px; cursor: pointer; }
 
 /* Shopping Summary */
-.summary-card {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-.summary-card h3 {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.summary-card .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
+.summary-card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
+.summary-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.summary-card .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 .dot-instacart { background: var(--instacart); }
 .dot-sautters { background: var(--sautters); }
 .summary-list { list-style: none; }
-.summary-list li {
-  font-size: 13px;
-  padding: 4px 0;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.summary-list li.checked-item {
-  text-decoration: line-through;
-  opacity: 0.5;
-}
+.summary-list li { font-size: 13px; padding: 4px 0; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.summary-list li.checked-item { text-decoration: line-through; opacity: 0.5; }
 
 /* Loading & Empty States */
-.loading {
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--text-light);
-}
-.loading .spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--border);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 12px;
-}
+.loading { text-align: center; padding: 60px 20px; color: var(--text-light); }
+.loading .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-light);
-  font-size: 14px;
-}
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); font-size: 14px; }
 
 /* Toast */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--accent);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 500;
-  z-index: 200;
-  transition: transform 0.3s;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--accent); color: white; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 500; z-index: 200; transition: transform 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Recipe Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: none; z-index: 300; }
+.modal-overlay.show { display: flex; align-items: flex-start; justify-content: center; }
+.modal-content { background: var(--bg); width: 100%; max-width: 480px; max-height: 92vh; margin-top: 4vh; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+.modal-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; padding: 20px; position: relative; }
+.modal-header h2 { font-size: 18px; font-weight: 700; padding-right: 36px; }
+.modal-header .meta { font-size: 12px; opacity: 0.85; margin-top: 4px; }
+.modal-close { position: absolute; top: 14px; right: 14px; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,0.25); color: white; border: none; font-size: 20px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.modal-body { padding: 16px 20px 24px; overflow-y: auto; flex: 1; }
+.modal-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--primary); margin: 18px 0 8px; }
+.modal-section-title:first-child { margin-top: 4px; }
+.ingredients-list { padding-left: 20px; font-size: 14px; line-height: 1.7; color: var(--text); }
+.ingredients-list li { margin-bottom: 2px; }
+.instructions-list { padding-left: 22px; font-size: 14px; line-height: 1.6; color: var(--text); }
+.instructions-list li { margin-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -416,10 +173,85 @@ body {
   <div id="shop-sautters" style="margin-top:16px"></div>
 </div>
 
+<!-- Recipe Modal -->
+<div class="modal-overlay" id="recipeModal" onclick="if(event.target===this) closeRecipe()">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="recipe-title">Recipe</h2>
+      <div class="meta" id="recipe-meta"></div>
+      <button class="modal-close" onclick="closeRecipe()" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">Ingredients</div>
+      <ul class="ingredients-list" id="recipe-ingredients"></ul>
+      <div class="modal-section-title">Instructions</div>
+      <ol class="instructions-list" id="recipe-instructions"></ol>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbz0jyJ_rS2pmqS5FQ0FPeWMDkwcabOEK-NxlLks293MBrigC9wpg_CtUprpjm_aD5NDaA/exec';
+
+// Hardcoded recipes — long-term these will move to the Dinners sheet's recipe column.
+const RECIPES = {
+  "Garlic Chili Shrimp Zoodles": {
+    prepTime: "15 min",
+    serves: "2",
+    ingredients: [
+      "1 lb large shrimp, peeled and deveined",
+      "2-3 containers pre-spiralized zucchini noodles",
+      "5-6 garlic cloves, minced",
+      "1 bunch fresh parsley, chopped",
+      "1 lemon (half for juice, half for wedges)",
+      "1 tsp red pepper flakes (adjust to taste)",
+      "3 tbsp olive oil",
+      "Salt and pepper"
+    ],
+    instructions: [
+      "Pat shrimp dry, season with salt and pepper.",
+      "Heat 2 tbsp olive oil in a large skillet over medium-high heat.",
+      "Add minced garlic and sauté 30 seconds until fragrant.",
+      "Add red pepper flakes and stir for 10 seconds.",
+      "Add shrimp and cook 2 minutes per side until pink and just opaque. Remove to a plate.",
+      "Add the remaining 1 tbsp olive oil to the pan, then add the zucchini noodles. Toss with the garlic-chili oil for 2-3 minutes — they should still have bite (don't overcook or they'll get watery).",
+      "Return the shrimp to the pan, squeeze the juice of half the lemon over everything, and toss to combine. Season with salt.",
+      "Plate and top with chopped parsley; serve with lemon wedges."
+    ]
+  },
+  "Chipotle Lamb Soft Tacos": {
+    prepTime: "20 min",
+    serves: "2 (about 4 tacos)",
+    ingredients: [
+      "1 lb ground lamb",
+      "2-3 chipotles in adobo + 1 tbsp adobo sauce (from the can)",
+      "1 tsp ground cumin",
+      "1 tsp smoked paprika",
+      "1 white onion, diced (use half cooked, half raw for garnish)",
+      "1 bunch fresh cilantro, chopped",
+      "2 limes (1 for cooking, 1 cut into wedges)",
+      "2 avocados (1 for crema, 1 sliced for garnish)",
+      "1 jalapeno, finely diced",
+      "8 small corn tortillas",
+      "4 oz queso fresco, crumbled",
+      "Salt to taste"
+    ],
+    instructions: [
+      "Prep everything first: dice the onion and jalapeno, chop the cilantro, halve and pit the avocados.",
+      "Heat a large skillet over medium-high heat (no oil — lamb is fatty enough).",
+      "Add the ground lamb, breaking it apart with a spatula. Cook 5-6 minutes until browned.",
+      "Drain excess fat if more than 2 tbsp remains.",
+      "Add half the diced onion and cook 2 minutes until softened.",
+      "Mince 2-3 chipotles from the can and add along with 1 tbsp adobo sauce, the cumin, and smoked paprika. Stir to combine.",
+      "Cook 2 more minutes; season with salt and the juice of half a lime.",
+      "Warm the corn tortillas in a dry skillet, 15 seconds per side.",
+      "Make crema: mash one avocado with the juice of half a lime and a pinch of salt.",
+      "Assemble each taco: spread avocado crema on the tortilla, top with lamb, then sprinkle with raw onion, cilantro, jalapeno, sliced avocado, and crumbled queso fresco. Serve with lime wedges."
+    ]
+  }
+};
 
 let appData = { dinners: [], groceryList: [], regulars: [], customItems: [], config: {} };
 
@@ -435,8 +267,7 @@ async function loadData() {
     renderAll();
   } catch (err) {
     console.error('Load error:', err);
-    document.getElementById('dinners-loading').innerHTML =
-      '<p style="color:#ef4444">Could not load data. Please refresh.</p>';
+    document.getElementById('dinners-loading').innerHTML = '<p style="color:#ef4444">Could not load data. Please refresh.</p>';
   }
 }
 
@@ -497,6 +328,7 @@ function renderDinners() {
   const loading = document.getElementById('dinners-loading');
   const empty = document.getElementById('dinners-empty');
   const list = document.getElementById('dinners-list');
+
   loading.style.display = 'none';
 
   if (!appData.dinners || appData.dinners.length === 0) {
@@ -504,8 +336,8 @@ function renderDinners() {
     list.innerHTML = '';
     return;
   }
-  empty.style.display = 'none';
 
+  empty.style.display = 'none';
   const selectedCount = appData.dinners.filter(d => d.selected === true || d.selected === 'true' || d.selected === 'TRUE').length;
 
   list.innerHTML = `
@@ -514,14 +346,21 @@ function renderDinners() {
     </p>
     ${appData.dinners.map(d => {
       const sel = d.selected === true || d.selected === 'true' || d.selected === 'TRUE';
+      const hasInlineRecipe = !!RECIPES[d.name];
       const recipeUrl = d.recipeUrl || '';
+      let recipeHtml = '';
+      if (hasInlineRecipe) {
+        recipeHtml = `<br><a class="recipe-link" href="javascript:void(0)" onclick="event.stopPropagation(); openRecipe('${escAttr(d.name)}')">View recipe →</a>`;
+      } else if (recipeUrl) {
+        recipeHtml = `<br><a class="recipe-link" href="${escHtml(recipeUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View full recipe →</a>`;
+      }
       return `
-        <div class="dinner-card ${sel ? 'selected' : ''}" onclick="toggleDinner('${escHtml(d.name)}', ${!sel})">
+        <div class="dinner-card ${sel ? 'selected' : ''}" onclick="toggleDinner('${escAttr(d.name)}', ${!sel})">
           <div class="check">${sel ? '✓' : ''}</div>
           <h3>${escHtml(d.name)}</h3>
           <div class="desc">${escHtml(d.description || '')}</div>
           <span class="prep">${escHtml(d.prepTime || '')}</span>
-          ${recipeUrl ? `<br><a class="recipe-link" href="${escHtml(recipeUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">View full recipe →</a>` : ''}
+          ${recipeHtml}
         </div>
       `;
     }).join('')}
@@ -531,6 +370,7 @@ function renderDinners() {
 function renderGrocery() {
   const list = document.getElementById('grocery-list');
   const anySelected = hasAnyDinnerSelected();
+
   const allItems = [
     ...appData.groceryList.map(i => ({...i, sheet: 'GroceryList'})),
     ...appData.customItems.map(i => ({...i, sheet: 'CustomItems'}))
@@ -566,16 +406,14 @@ function renderGrocery() {
       const store = item.store || 'instacart';
       html += `
         <div class="grocery-item ${checked ? 'checked' : ''}">
-          <div class="item-check ${checked ? 'checked' : ''}"
-               onclick="toggleItemCheck('${escHtml(item.name)}', '${item.sheet}')">
+          <div class="item-check ${checked ? 'checked' : ''}" onclick="toggleItemCheck('${escAttr(item.name)}', '${item.sheet}')">
             ${checked ? '✓' : ''}
           </div>
           <div class="item-info">
             <div class="item-name">${escHtml(item.name)}</div>
             ${item.source ? `<div class="item-source">from: ${escHtml(item.source)}</div>` : ''}
           </div>
-          <button class="store-badge store-${store}"
-                  onclick="event.stopPropagation(); cycleStore('${escHtml(item.name)}', '${store}', '${item.sheet}')">
+          <button class="store-badge store-${store}" onclick="event.stopPropagation(); cycleStore('${escAttr(item.name)}', '${store}', '${item.sheet}')">
             ${store === 'sautters' ? "Sautters'" : 'Instacart'}
           </button>
         </div>
@@ -608,13 +446,11 @@ function renderRegulars() {
       const store = item.defaultStore || 'instacart';
       html += `
         <div class="regular-item">
-          <button class="regular-toggle ${active ? 'active' : ''}"
-                  onclick="toggleRegularItem('${escHtml(item.name)}', ${!active})"></button>
+          <button class="regular-toggle ${active ? 'active' : ''}" onclick="toggleRegularItem('${escAttr(item.name)}', ${!active})"></button>
           <div class="item-info">
             <div class="item-name">${escHtml(item.name)}</div>
           </div>
-          <button class="store-badge store-${store}"
-                  onclick="event.stopPropagation(); cycleRegularStore('${escHtml(item.name)}', '${store}')">
+          <button class="store-badge store-${store}" onclick="event.stopPropagation(); cycleRegularStore('${escAttr(item.name)}', '${store}')">
             ${store === 'sautters' ? "Sautters'" : 'Instacart'}
           </button>
         </div>
@@ -628,18 +464,14 @@ function renderShop() {
   // Combine grocery items + active regulars + custom items
   const items = [];
   const anySelected = hasAnyDinnerSelected();
-
   appData.groceryList.filter(i => !anySelected || isItemVisibleForSelection(i)).forEach(i => items.push({
     name: i.name, store: i.store || 'instacart',
     checked: i.checked === true || i.checked === 'true' || i.checked === 'TRUE',
     category: i.category, sheet: 'GroceryList'
   }));
-
   appData.regulars.filter(r => r.active === true || r.active === 'true' || r.active === 'TRUE').forEach(i => items.push({
-    name: i.name, store: i.defaultStore || 'instacart',
-    checked: false, category: i.category, sheet: 'Regulars'
+    name: i.name, store: i.defaultStore || 'instacart', checked: false, category: i.category, sheet: 'Regulars'
   }));
-
   appData.customItems.forEach(i => items.push({
     name: i.name, store: i.store || 'instacart',
     checked: i.checked === true || i.checked === 'true' || i.checked === 'TRUE',
@@ -665,9 +497,7 @@ function renderShopCard(title, storeKey, items) {
       <ul class="summary-list">
         ${items.length === 0 ? '<li style="color:var(--text-light)">No items</li>' :
           items.map(i => `
-            <li class="${i.checked ? 'checked-item' : ''}"
-                onclick="toggleShopItem('${escHtml(i.name)}', '${i.sheet}')"
-                style="cursor:pointer">
+            <li class="${i.checked ? 'checked-item' : ''}" onclick="toggleShopItem('${escAttr(i.name)}', '${i.sheet}')" style="cursor:pointer">
               <span>${i.checked ? '☑' : '☐'}</span> ${escHtml(i.name)}
             </li>
           `).join('')}
@@ -692,7 +522,6 @@ async function toggleDinner(name, selected) {
   if (dinner) dinner.selected = selected;
   renderAll();
   showToast(selected ? `Added: ${name}` : `Removed: ${name}`);
-
   // Persist selection to backend
   await postAction({ action: 'selectDinner', name, selected });
 }
@@ -704,7 +533,6 @@ async function toggleItemCheck(name, sheetName) {
   if (item) item.checked = !(item.checked === true || item.checked === 'true' || item.checked === 'TRUE');
   renderGrocery();
   renderShop();
-
   await postAction({ action: 'toggleChecked', name, sheetName });
 }
 
@@ -722,7 +550,6 @@ async function cycleStore(name, currentStore, sheetName) {
   renderGrocery();
   renderShop();
   showToast(`${name} → ${newStore === 'sautters' ? "Sautters'" : 'Instacart'}`);
-
   await postAction({ action: 'updateStore', name, store: newStore, sheetName });
 }
 
@@ -733,7 +560,6 @@ async function cycleRegularStore(name, currentStore) {
   renderRegulars();
   renderShop();
   showToast(`${name} → ${newStore === 'sautters' ? "Sautters'" : 'Instacart'}`);
-
   await postAction({ action: 'updateStore', name, store: newStore, sheetName: 'Regulars' });
 }
 
@@ -744,7 +570,6 @@ async function toggleRegularItem(name, active) {
   renderShop();
   updateGroceryCount();
   showToast(active ? `Added: ${name}` : `Removed: ${name}`);
-
   await postAction({ action: 'toggleRegular', name, active });
 }
 
@@ -752,19 +577,43 @@ async function addCustomItem() {
   const input = document.getElementById('customItemName');
   const name = input.value.trim();
   if (!name) return;
-
   input.value = '';
   const weekOf = appData.config.weekOf || '';
-
   // Optimistic
   appData.customItems.push({ name, category: 'Custom', store: 'instacart', checked: false, weekOf });
   renderGrocery();
   renderShop();
   updateGroceryCount();
   showToast(`Added: ${name}`);
-
   await postAction({ action: 'addCustomItem', name, category: 'Custom', store: 'instacart', weekOf });
 }
+
+// ---- RECIPE MODAL ----
+function openRecipe(name) {
+  const recipe = RECIPES[name];
+  if (!recipe) {
+    showToast('No recipe yet for this dinner');
+    return;
+  }
+  document.getElementById('recipe-title').textContent = name;
+  document.getElementById('recipe-meta').textContent = `${recipe.prepTime} • Serves ${recipe.serves}`;
+  document.getElementById('recipe-ingredients').innerHTML =
+    recipe.ingredients.map(i => `<li>${escHtml(i)}</li>`).join('');
+  document.getElementById('recipe-instructions').innerHTML =
+    recipe.instructions.map(i => `<li>${escHtml(i)}</li>`).join('');
+  document.getElementById('recipeModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRecipe() {
+  document.getElementById('recipeModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeRecipe();
+});
 
 // ---- TABS ----
 document.querySelectorAll('.tab').forEach(tab => {
@@ -780,6 +629,12 @@ document.querySelectorAll('.tab').forEach(tab => {
 function escHtml(str) {
   if (!str) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+// For values inside single-quoted attributes (like onclick="foo('NAME')") we
+// also need to escape backslashes and single quotes safely.
+function escAttr(str) {
+  if (!str) return '';
+  return String(str).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function showToast(msg) {
@@ -797,5 +652,6 @@ document.getElementById('customItemName').addEventListener('keydown', (e) => {
 // ---- INIT ----
 loadData();
 </script>
+
 </body>
 </html>
